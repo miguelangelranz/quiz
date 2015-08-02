@@ -16,7 +16,19 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res, next) {
-   models.Quiz.findAll().then(
+    //findAll({where: ["pregunta like ?", search]}]
+    //models.Quiz.findAll().then(
+    
+    //Si no hay selección, llega null, adaptamos para que la query sea válida.
+    var patron;
+    if (req.query.search==null) {
+        patron="%%";
+    } else {
+        //Encerramos entre % y Sustituímos los espacios por %.
+        patron="%"+req.query.search.replace(/ /, '%')+"%";
+    }
+   
+   models.Quiz.findAll({where: ["pregunta like ?", patron], order:"pregunta"}).then(
       function(quizes) {
          res.render('quizes/index', {quizes: quizes});
       }
