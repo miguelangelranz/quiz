@@ -39,8 +39,19 @@ app.use(function(req, res, next) {
       req.session.redir = req.path;
    }
 
+   // Verificar y establecer timeout
+   if (req.session.user) 
+   {
+      if (Date.now() - req.session.lastRequestTime > 2*60*1000) 
+      {
+	     delete req.session.user;
+	  } 
+   }
+   req.session.lastRequestTime = Date.now();
+		
    // Hacer visible req.session en las vistas
    res.locals.session = req.session;
+   
    next();
 });
 
