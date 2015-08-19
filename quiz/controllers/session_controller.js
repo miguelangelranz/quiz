@@ -1,3 +1,21 @@
+// Autorización de accesos HTTP restringidos
+// Simplemente revisa si el usuario está en sesión (ha pasado por login, ha
+// sido autenticado y por consiguiente, tenemos req.session.user)
+// Lo invocaremos en cualquier acceso restringido, y si no está en sesión,
+// redirigirá al usuario a login.
+// Como login vuelve a la página en la que estaba cuando fué llamado... tras
+// autenticarse el usuario continuará la navegación allí donde estaba.
+exports.loginRequired = function(req, res, next) {
+   if (req.session.user) 
+   {
+      next();
+   } 
+   else 
+   {
+      res.redirect('/login');
+   }
+};
+
 // Get /login   -- Formulario de login
 exports.new = function(req, res) {
    var errors = req.session.errors || {};
